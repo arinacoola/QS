@@ -2,7 +2,7 @@ import cirq
 import math
 
 def mark_one(cir,qubt,target):
-    bits=target
+    bits = target[::-1]
     for i, bit in enumerate(bits):
         if bit == "0":
             cir.append(cirq.X(qubt[i]))
@@ -13,7 +13,7 @@ def mark_one(cir,qubt,target):
 
 def oracle(cir,qubt, targets):
     for target in targets:
-        bits=target
+        bits = target[::-1]
         for i, bit in enumerate(bits):
             if bit == "0":
                 cir.append(cirq.X(qubt[i]))
@@ -45,10 +45,11 @@ def grover_many(n, targets):
     cir.append(cirq.measure(*qubt,key="result"))
     return cir
 
-n=3
-targets=["101", "011"]
-cir=grover_many(n, targets)
-print(cir)
-sim =cirq.Simulator()
-result=sim.run(cir, repetitions=1000)
-print(result.histogram(key="result"))
+if __name__ == "__main__":
+    n=3
+    targets = ["101", "011"]
+    cir =grover_many(n,targets)
+    print(cir)
+    sim = cirq.Simulator()
+    result=sim.run(cir, repetitions=1000)
+    print(result.histogram(key="result"))

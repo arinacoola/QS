@@ -25,7 +25,8 @@ def grover(n, target):
     cir=cirq.Circuit()
     cir.append(cirq.H.on_each(*qubt))
     N = 2 **n
-    steps = round((math.pi/4)*math.sqrt(N))
+    steps = round(math.pi/4*math.sqrt(N)-0.5) 
+    steps=max(1, steps) 
     for _ in range(steps):
         mark_one(cir, qubt, target)
         diff(cir,qubt)
@@ -35,22 +36,24 @@ def grover(n, target):
 sizes=[]
 times =[]
 sim=cirq.Simulator()
+rep =100 
 
 for n in range(2,11):
     target = "1"*n
     cir =grover(n, target)
     start=time.perf_counter()
-    result = sim.run(cir,repetitions=100)
+    result = sim.run(cir,repetitions=rep)
     end = time.perf_counter()
     N=2**n
-    elapsed =end - start
+    elapsed =(end - start)/rep
     sizes.append(N)
     times.append(elapsed)
     print("n =", n, "N =", N, "time =", round(elapsed, 4), "sec")
 
 plt.plot(sizes,times,marker="o")
 plt.xlabel("number of elements N")
-plt.ylabel("execution time, sec")
+plt.ylabel("average  execution time, sec")
 plt.title("Grover algorithm simulation time")
 plt.grid(True)
 plt.savefig("grover_time.png")
+plt.show()

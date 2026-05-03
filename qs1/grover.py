@@ -23,7 +23,8 @@ def grover(n,target):
     cir=cirq.Circuit()
     cir.append(cirq.H.on_each(*qubt))
     N = 2 ** n
-    steps = round((math.pi / 4)* math.sqrt(N))
+    steps = round(math.pi/4 *math.sqrt(N) - 0.5) 
+    steps =max(1,steps)  
     for _ in range(steps):
         state(cir,qubt,target)
         diff(cir,qubt)
